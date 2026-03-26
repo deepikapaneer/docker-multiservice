@@ -74,6 +74,22 @@ http://localhost:8080
 - Persistent data with Docker volumes
 - Live API integration with GitHub API
 
+## Customize for Your Own Portfolio   ← ADD HERE
+
+This project is reusable! To make it your own:
+
+1. Open `backend/app.py`
+2. Change this one line:
+```python
+GITHUB_USERNAME = "deepikapaneer"  # replace with your GitHub username
+```
+3. Run `docker compose up --build`
+4. Your own GitHub projects will appear automatically!
+
+> All data is pulled live from the public GitHub API —
+> only your public repositories are displayed.
+> Private repos are never exposed.
+
 ## Project Status
 
 ✅ All 3 containers running
