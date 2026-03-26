@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepika's DevOps Portfolio</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #0d1117; color: #c9d1d9; }
+    header { background: #161b22; padding: 20px 40px; border-bottom: 1px solid #30363d; }
+    header h1 { color: #58a6ff; font-size: 24px; }
+    header p { color: #8b949e; font-size: 14px; margin-top: 4px; }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+    .card h2 { color: #58a6ff; margin-bottom: 16px; font-size: 18px; }
+    .btn { background: #238636; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-right: 10px; margin-bottom: 10px; }
+    .btn:hover { background: #2ea043; }
+    .output { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin-top: 16px; font-family: monospace; font-size: 13px; white-space: pre-wrap; min-height: 60px; color: #c9d1d9; display: none; }
+    .skill-tag { display: inline-block; background: #1f6feb; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin: 4px; }
+    .project-card { border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+    .project-card h3 { color: #58a6ff; font-size: 15px; }
+    .project-card p { color: #8b949e; font-size: 13px; margin-top: 6px; }
+    .project-card a { color: #58a6ff; font-size: 12px; text-decoration: none; }
+    .lang-tag { display: inline-block; background: #238636; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-top: 8px; }
+    .status { color: #3fb950; font-size: 13px; margin-top: 8px; }
+    footer { text-align: center; padding: 30px; color: #8b949e; font-size: 13px; border-top: 1px solid #30363d; margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Deepika's DevOps Portfolio</h1>
+    <p>Aspiring DevOps & Cloud Engineer</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Health Check -->
+    <div class="card">
+      <h2>API Health Status</h2>
+      <button class="btn" onclick="checkHealth()">Check Health</button>
+      <div class="output" id="health-output"></div>
+    </div>
+
+    <!-- Skills -->
+    <div class="card">
+      <h2>My Skills</h2>
+      <button class="btn" onclick="loadSkills()">Load Skills</button>
+      <div class="output" id="skills-output"></div>
+    </div>
+
+    <!-- Projects -->
+    <div class="card">
+      <h2>My GitHub Projects</h2>
+      <button class="btn" onclick="loadProjects()">Load Projects</button>
+      <div class="output" id="projects-output"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Built with Flask + PostgreSQL + nginx + Docker Compose</p>
+    <p style="margin-top:8px;">
+      <a href="https://github.com/deepikapaneer" style="color:#58a6ff;">github.com/deepikapaneer</a>
+    </p>
+  </footer>
+
+  <script>
+    const API = '';
+
+    async function checkHealth() {
+      const out = document.getElementById('health-output');
+      out.style.display = 'block';
+      out.textContent = 'Checking...';
+      try {
+        const res = await fetch(`/api/health`);
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: Could not reach backend';
+      }
+    }
+
+    async function loadSkills() {
+      const out = document.getElementById('skills-output');
+      out.style.display = 'block';
+      out.textContent = 'Loading...';
+      try {
+        const res = await fetch(`/api/skills`);
+        const data = await res.json();
+        out.innerHTML = '';
+        data.skills.forEach(skill => {
+          const tag = document.createElement('span');
+          tag.className = 'skill-tag';
+          tag.textContent = skill;
+          out.appendChild(tag);
+        });
+        out.style.display = 'block';
+      } catch (e) {
+        out.textContent = 'Error: Could not reach backend';
+      }
+    }
+
+    async function loadProjects() {
+      const out = document.getElementById('projects-output');
+      out.style.display = 'block';
+      out.textContent = 'Loading your GitHub projects...';
+      try {
+        const res = await fetch(`/api/projects`);
+        const data = await res.json();
+        out.innerHTML = '';
+        data.projects.forEach(project => {
+          out.innerHTML += `
+            <div class="project-card">
+              <h3>${project.name}</h3>
+              <p>${project.description || 'No description provided'}</p>
+              ${project.language ? `<span class="lang-tag">${project.language}</span>` : ''}
+              <br/>
+              <a href="${project.url}" target="_blank">View on GitHub →</a>
+            </div>
+          `;
+        });
+      } catch (e) {
+        out.textContent = 'Error: Could not reach backend';
+      }
+    }
+  </script>
+
+</body>
+</html>
